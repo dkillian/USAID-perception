@@ -1,0 +1,151 @@
+---
+title: "USAID awareness, perception, information"
+subtitle: "Model and data for measuring perception of USAID"
+author: "Dan Killian, with Posit AI"
+date: today
+toc: true
+toc-depth: 3
+number-sections: true
+format:
+  html:
+    code-fold: true
+    page-layout: full
+execute: 
+  keep-md: true
+  warning: false
+  message: false
+  fig.height: 4
+  fig.width: 5
+editor: source
+reference-location: margin
+---
+
+```{r global_options, include=F, echo=F, error=F}
+library(here)
+library(knitr)
+source("../../prep (May 2025).r")
+```
+
+## Background
+
+## Measurement model
+
+## Survey instrument flow
+
+```{mermair}
+
+```
+
+
+
+```{mermaid}
+flowchart TD
+    START([Start Interview]) --> CONSENT[Introduction & Consent\nGaza: remote calls\nWest Bank: household visits]
+
+    CONSENT --> Q1["Q1. Have you seen/heard\nof any donor logos?"]
+
+    Q1 -->|Yes| Q2["Q2. For each recognized donor\nPerception of donor\n1–5 scale"]
+    Q1 -->|No| Q3
+
+    Q2 --> Q3["Q3. How familiar are you\nwith USAID?\n1=Very familiar ... Not at all"]
+
+    Q3 -->|"Not at all familiar\nor Unsure"| USG
+    Q3 -->|"Somewhat or\nVery Familiar (1 or 2)"| Q4
+
+    subgraph USAID_familiar ["If Q3 = 1 or 2 (Familiar with USAID)"]
+        Q4["Q4. What types of USAID\nactivities are you familiar with?\n(select all that apply)"]
+        Q5["Q5. Current perception of USAID\n1-5 scale"]
+        Q6["Q6. Perception of USAID\nbefore Oct 7, 2023\n1-5 scale"]
+        Q7_neg["Q7. Why negative perception?\n(select all that apply)"]
+        Q8_pos["Q8. Why positive impression?\n(select all that apply)"]
+
+        Q4 --> Q5 --> Q6
+        Q6 -->|"Q5 or Q6 = 1 or 2\n(Negative)"| Q7_neg
+        Q6 -->|"Q5 or Q6 = 4 or 5\n(Positive)"| Q8_pos
+    end
+
+    Q7_neg --> USG
+    Q8_pos --> USG
+
+    subgraph USG ["Perception of U.S. Government & People"]
+        Qu7["Q_. Perception of U.S. Government\n(1-5 scale)"]
+        Qu8["Q_. Perception of U.S. people\n(1-5 scale)"]
+        Qu9["Q_. Perception of U.S. policy\n(1-5 scale)"]
+        Qu10["Q_. Perception of U.S. support\nfor Palestinians (1-5 scale)"]
+        Qu7 --> Qu8 --> Qu9 --> Qu10
+    end
+
+    USG --> INFO["Information Treatment\n(randomized)"]
+
+    INFO --> EXP_USAID
+
+    subgraph EXP_USAID ["Exposure to USAID — if Q3 = 1 or 2"]
+        Q9e["Q9. Benefited from\nUSAID activity?"]
+        Q10e["Q10. if Q9=1\nWhat types of activities?"]
+        Q11e["Q11. Know someone who\nbenefited from USAID?"]
+        Q12e["Q12. if Q11=1\nWhat type of activity?"]
+        Q9e -->|Yes| Q10e
+        Q9e --> Q11e
+        Q10e --> Q11e
+        Q11e -->|Yes| Q12e
+    end
+
+    EXP_USAID --> EXP_OTHER
+
+    subgraph EXP_OTHER ["Exposure to Other Development & Humanitarian Actors"]
+        Q21["Q21. Benefited from\nany development activity?"]
+        Q22["Q22. if Q21=1\nWhich donors funded it?"]
+        Q21 -->|Yes| Q22
+    end
+
+    EXP_OTHER --> MEDIA
+
+    subgraph MEDIA ["Media Use"]
+        Q28["Q28. Listen to radio?"]
+        Q29["Q29. if radio: Which stations?"]
+        Q30["Q30. if radio: Frequency?"]
+        Q31["Q31. Watch television?"]
+        Q32_tv["Q32. if TV: Which channels?"]
+        Q32_sm["Q32. Use social media?"]
+        Q33["Q33. if social media 1-6\nWhich platforms?"]
+
+        Q28 -->|Yes| Q29 --> Q30
+        Q28 --> Q31
+        Q30 --> Q31
+        Q31 -->|Yes| Q32_tv
+        Q31 --> Q32_sm
+        Q32_tv --> Q32_sm
+        Q32_sm -->|Uses social media| Q33
+    end
+
+    MEDIA --> DEV_PRI
+
+    subgraph DEV_PRI ["Development Priorities"]
+        Q38["Q38. West Bank: right or\nwrong direction?"]
+        Q39["Q39. Gaza: right or\nwrong direction?"]
+        Q38 --> Q39
+    end
+
+    DEV_PRI --> HH_CHAR
+
+    subgraph HH_CHAR ["Household Characteristics"]
+        Q40["Q40-Q41. HH size & income"]
+        Q42["Q42. Employment status"]
+        Q43["Q43. if Q42=1-3\nType of employment"]
+        Q40 --> Q42
+        Q42 -->|"Employed (1-3)"| Q43
+    end
+
+    HH_CHAR --> DEMO
+
+    subgraph DEMO ["Respondent Demographics"]
+        Q44["Q44. Age"]
+        Q45["Q45. Gender"]
+        Q46["Q46. Location / region"]
+        Q47["Q47. Religion"]
+        Q48["Q48. Education level"]
+        Q44 --> Q45 --> Q46 --> Q47 --> Q48
+    end
+
+    DEMO --> CLOSE([Close / Thank You])
+```
